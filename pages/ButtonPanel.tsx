@@ -13,7 +13,7 @@ const ButtonPanel: React.FC<ButtonPanelProps> = ({
   isDarkMode,
 }) => {
   return (
-    <div className="flex justify-end mb-4">
+    <div className="flex justify-end mb-1 mt-1">
       <button
         className={`bg-blue-500 hover:bg-blue-700 ${isDarkMode ? 'text-black' : 'text-white' } font-bold py-2 px-4 rounded mr-2`}onClick={increaseFontSize}>
         А+
