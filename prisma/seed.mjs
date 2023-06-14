@@ -1,28 +1,28 @@
 import { PrismaClient } from '@prisma/client';
 
-
 const prisma = new PrismaClient();
 
+async function createUser(email, password, name) {
+  const user = await prisma.user.create({
+    data: {
+      email,
+      password,
+      name,
+    },
+  });
 
-const createCategories = async () => {
-  const categories = [
-    { name: 'Війна ' },
-    { name: 'Здоров`я' },
-    { name: 'Програмування' },
-    { name: 'Технології' },
-  ];
+  return user;
+}
 
+async function main() {
   try {
-    await prisma.category.createMany({
-      data: categories,
-    });
-
-    console.log('Categories created');
+    const newUser = await createUser('admins@gmail.com', '$2a$12$wSAQRVUGKuJvjCoi.1AvSedF8Zg4QZWuNbtsp9/OWhKmLN2FdLgAa', 'admin');
+    console.log('New user created:', newUser);
   } catch (error) {
-    console.error('Failed to create categories', error);
+    console.error('Error creating user:', error);
   } finally {
     await prisma.$disconnect();
   }
-};
+}
 
-createCategories();
+main();

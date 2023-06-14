@@ -52,7 +52,7 @@ const Dashboard = ({ posts, categories }: DashboardProps) => {
 
   const create = async (data: FormData) => {
     try {
-      const response = await fetch('/api/create', {
+      const response = await fetch('/api/post/create', {
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ const Dashboard = ({ posts, categories }: DashboardProps) => {
       });
 
       if (response.ok) {
-        await fetch(`/api/comment/post/${id}`, {
+        await fetch(`/api/post/${id}`, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -105,7 +105,7 @@ const Dashboard = ({ posts, categories }: DashboardProps) => {
 
   const deleteComment = async (postId: number, commentId: number) => {
     try {
-      const response = await fetch(`/api/comment/${commentId}`, {
+      const response = await fetch(`/api/comments/${commentId}`, {
         headers: {
           'Content-Type': 'application/json',
         },
