@@ -1,12 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 
+
 const prisma = new PrismaClient();
+
 
 const createCategories = async () => {
   const categories = [
-    { name: 'Війна' },
+    { name: 'Війна ' },
+    { name: 'Здоров`я' },
     { name: 'Програмування' },
-    { name: 'Здоровя' },
     { name: 'Технології' },
   ];
 

@@ -9,32 +9,36 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model User{
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String?
-  password String
-}
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  title     String    @unique
-  content   String?
-  imageLink String?
-  createdAt DateTime  @default(now())
-  comments  Comment[] @relation("PostComments")
-  categoryId  Int?
-  category    Category?  @relation(fields: [categoryId], references: [id])
+  id         Int       @id @default(autoincrement())
+  title      String    @unique
+  content    String?
+  imageLink  String?
+  createdAt  DateTime  @default(now())
+  comments   Comment[] @relation("PostComments")
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id])
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  createdAt DateTime @default(now())
-  postId    Int
-  post      Post     @relation("PostComments",fields: [postId], references: [id])
-  name      String?
+  id          Int        @id @default(autoincrement())
+  content     String
+  createdAt   DateTime   @default(now())
+  postId      Int
+  post        Post       @relation("PostComments", fields: [postId], references: [id])
+  name        String?
+
+  likes       Int        @default(0)
+  dislikes    Int        @default(0)
 }
+model User{
+  id Int @id @default(autoincrement())
+  email String @unique
+  password String
+  name String?
+}
+
 
 model Category {
   id    Int    @id @default(autoincrement())

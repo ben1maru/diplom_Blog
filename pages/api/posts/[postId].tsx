@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { postId } = req.query;
 
-  // Замініть цей код своєю логікою для отримання даних допису на основі postId
   const post = {
     id: postId,
   };

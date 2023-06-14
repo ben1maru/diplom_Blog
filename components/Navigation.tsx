@@ -29,13 +29,8 @@ const Navigation: React.FC<NavigationProps> = ({ categories, navigateToPost }) =
               </a>
             </div>
             <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a
-                  href="/"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  onClick={() => handleNavigation(null)}
-                >
-                </a>
+              <div className="ml-10 flex items-center space-x-4">
+           
                 {categories.map((category) => (
                   <a
                     key={category.id}
@@ -44,7 +39,11 @@ const Navigation: React.FC<NavigationProps> = ({ categories, navigateToPost }) =
                   >
                     {category.name}
                   </a>
+                  
                 ))}
+                <a href="/resume" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-xl font-medium">
+                Про автора
+              </a>
               </div>
             </div>
           </div>
@@ -85,13 +84,6 @@ const Navigation: React.FC<NavigationProps> = ({ categories, navigateToPost }) =
       {isMobileMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a
-              href="/"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-              onClick={() => handleNavigation(null)}
-            >
-              Головна
-            </a>
             {categories.map((category) => (
               <a
             
@@ -101,7 +93,12 @@ const Navigation: React.FC<NavigationProps> = ({ categories, navigateToPost }) =
               >
                 {category.name}
               </a>
-            ))}
+              
+            ))
+            }
+             <a href="/resume" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                Про автора
+              </a>
           </div>
         </div>
       )}
