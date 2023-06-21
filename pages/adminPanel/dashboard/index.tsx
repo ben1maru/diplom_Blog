@@ -166,7 +166,7 @@ const Dashboard = ({ posts, categories }: InferGetServerSidePropsType<typeof get
   value={form.categoryId.toString() || ''}
   onChange={(e) => setForm({ ...form, categoryId: parseInt(e.target.value) })}
 >
-  {categories.map((category) => (
+  {categories.map((category:any) => (
     <option key={category.id} value={category.id}>
       {category.name}
     </option>
@@ -179,7 +179,7 @@ const Dashboard = ({ posts, categories }: InferGetServerSidePropsType<typeof get
       </form>
       <div className="w-auto min-w-[25%] max-w-min mt-20 mx-auto space-y-6 flex flex-col item-stretch">
         <ul>
-          {posts.map((post) => (
+          {posts.map((post:any) => (
             <li key={post.id} className="border-b border-gray-600 p-2">
               <div className="flex justify-between">
                 <div className="flex-1">
@@ -202,7 +202,7 @@ const Dashboard = ({ posts, categories }: InferGetServerSidePropsType<typeof get
               <div>
                 <h4 className="font-bold">Коментарі:</h4>
                 <ul>
-                  {post.comments.map((comment) => (
+                  {post.comments.map((comment:any) => (
                     <li key={comment.id} className="border-b border-gray-600 p-2">
                       <div className="flex justify-between">
                         <div>
