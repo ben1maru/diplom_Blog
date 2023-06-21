@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { prisma } from '../../../lib/prisma';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { ChangeEvent } from 'react';
 
@@ -36,7 +36,7 @@ interface Category {
   name: string;
 }
 
-const Dashboard = ({ posts, categories }: DashboardProps) => {
+const Dashboard = ({ posts, categories }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [form, setForm] = useState<FormData>({ title: '', content: '', imageLink: '', categoryId: 0 });
   const router = useRouter();
 
@@ -52,7 +52,7 @@ const Dashboard = ({ posts, categories }: DashboardProps) => {
 
   const create = async (data: FormData) => {
     try {
-      const response = await fetch('/api/post/create', {
+      const response = await fetch('/api/create', {
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
@@ -186,13 +186,15 @@ const Dashboard = ({ posts, categories }: DashboardProps) => {
                   <h3 className="font-bold">{post.title}</h3>
                 </div>
                 <button
-                  onClick={() =>
-                    setForm({ title: post.title, content: post.content, imageLink: post.imageLink, categoryId: post.categoryId })
-                  }
-                  className="bg-blue-500 px-3 text-white rounded"
+                onClick={async () => {
+                await deletePost(post.id); // Видаляємо пост перед оновленням
+                setForm({ title: post.title, content: post.content, imageLink: post.imageLink, categoryId: post.categoryId });
+                 }}
+                 className="bg-blue-500 px-3 text-white rounded"
                 >
-                  Оновити
+                Оновити
                 </button>
+
                 <button onClick={() => deletePost(post.id)} className="bg-red-500 px-3 text-white rounded">
                   X
                 </button>

@@ -36,7 +36,7 @@ const PostPage: NextPage<PostPageProps> = ({ post, postComments }) => {
   const [comments, setComments] = useState<Comment[]>(postComments || []);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-
+  const [userReactions, setUserReactions] = useState<{ [commentId: number]: 'like' | 'dislike' }>({});
   const increaseFontSize = () => {
     setFontSize((prevSize) => prevSize + 2);
   };
@@ -104,7 +104,19 @@ const PostPage: NextPage<PostPageProps> = ({ post, postComments }) => {
       console.error('Failed to add comment', error);
     }
   };
-
+  useEffect(() => {
+    // Retrieve user reactions from cookies or other storage
+    const storedReactions = localStorage.getItem('userReactions');
+    if (storedReactions) {
+      setUserReactions(JSON.parse(storedReactions));
+    }
+  }, []);
+  
+  useEffect(() => {
+    // Save user reactions to cookies or other storage
+    localStorage.setItem('userReactions', JSON.stringify(userReactions));
+  }, [userReactions]);
+  
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -132,8 +144,7 @@ const PostPage: NextPage<PostPageProps> = ({ post, postComments }) => {
   };
 
   const handleLike = async (commentId: number) => {
-    const comment = comments.find((comment) => comment.id === commentId);
-    if (comment && !comment.likes) {
+    if (!userReactions[commentId]) {
       try {
         const response = await fetch(`/api/comments/${commentId}/like`, {
           method: 'POST',
@@ -148,6 +159,10 @@ const PostPage: NextPage<PostPageProps> = ({ post, postComments }) => {
                 : comment
             )
           );
+          setUserReactions((prevReactions) => ({
+            ...prevReactions,
+            [commentId]: 'like',
+          }));
         } else {
           console.error('Failed to like comment');
         }
@@ -158,8 +173,7 @@ const PostPage: NextPage<PostPageProps> = ({ post, postComments }) => {
   };
   
   const handleDislike = async (commentId: number) => {
-    const comment = comments.find((comment) => comment.id === commentId);
-    if (comment && !comment.dislikes) {
+    if (!userReactions[commentId]) {
       try {
         const response = await fetch(`/api/comments/${commentId}/dislike`, {
           method: 'POST',
@@ -174,6 +188,10 @@ const PostPage: NextPage<PostPageProps> = ({ post, postComments }) => {
                 : comment
             )
           );
+          setUserReactions((prevReactions) => ({
+            ...prevReactions,
+            [commentId]: 'dislike',
+          }));
         } else {
           console.error('Failed to dislike comment');
         }
@@ -182,7 +200,6 @@ const PostPage: NextPage<PostPageProps> = ({ post, postComments }) => {
       }
     }
   };
-  
 
   return (
     <div className={'container mx-auto px-4 py-8'}>
@@ -249,26 +266,26 @@ const PostPage: NextPage<PostPageProps> = ({ post, postComments }) => {
               </h3>
               <p className={`text-base ${isDarkMode ? 'text-white' : 'text-black'}`}>{comment.content}</p>
               <div className="mt-2 flex justify-start">
-                <button
-                  onClick={() => handleLike(comment.id)}
-                  className={`px-2 py-1 rounded-md ${
-                    comment.likes ? 'bg-red-500 text-white' : 'bg-gray-300 text-black'
-                  }`}
-                  style={{ background: 'transparent' }}
-                >
-                  <FaThumbsUp />
-                </button>
-                <span className={`mx-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>{comment.likes}</span>
-                <button
-                  onClick={() => handleDislike(comment.id)}
-                  className={`px-2 py-1 rounded-md ${
-                    comment.dislikes ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'
-                  }`}
-                  style={{ background: 'transparent' }}
-                >
-                  <FaThumbsDown />
-                </button>
-                <span className={`mx-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>{comment.dislikes}</span>
+              <button
+  onClick={() => handleLike(comment.id)}
+  className={`px-2 py-1 rounded-md ${
+    userReactions[comment.id] === 'like' ? 'bg-red-500 text-white' : 'bg-gray-300 text-black'
+  }`}
+  style={{ background: 'transparent' }}
+>
+  <FaThumbsUp />
+</button>
+<span className={`mx-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>{comment.likes}</span>
+<button
+  onClick={() => handleDislike(comment.id)}
+  className={`px-2 py-1 rounded-md ${
+    userReactions[comment.id] === 'dislike' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'
+  }`}
+  style={{ background: 'transparent' }}
+>
+  <FaThumbsDown />
+</button>
+<span className={`mx-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>{comment.dislikes}</span>
 
               </div>
             </div>
